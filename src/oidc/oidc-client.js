@@ -4,29 +4,21 @@ import Oidc from 'oidc-client';
 Oidc.Log.logger = console;
 Oidc.Log.level = Oidc.Log.DEBUG;
 
-let oidcProviderDomain = 'https://idp-domain';
+let oidcProviderDomain = process.env.VUE_APP_AUTH_URL;
+console.log(`oidcProviderDomain: ${process.env.VUE_APP_AUTH_URL}`)
 
 const oidcClient = new Oidc.UserManager({
   userStore: new Oidc.WebStorageStateStore(),  
   authority: oidcProviderDomain,
-  client_id: 'client-id',
+  client_id: process.env.VUE_APP_AUTH_CLIENT,
   redirect_uri: window.location.origin + '/callback',
   response_type: 'code',
-  scope: 'openid profile scopes',
+  scope: 'openid ' + (process.env.VUE_APP_AUTH_SCOPES ? process.env.VUE_APP_AUTH_SCOPES : ''),
   post_logout_redirect_uri: window.location.origin + '/home',
   accessTokenExpiringNotificationTime: 10,
   automaticSilentRenew: false,
   filterProtocolClaims: false,
   loadUserInfo: true,
   includeIdTokenInSilentRenew : false,
-  metadata: {
-      issuer: oidcProviderDomain,
-      authorization_endpoint: oidcProviderDomain + "/oxauth/restv1/authorize",
-      userinfo_endpoint: oidcProviderDomain + "/oxauth/restv1/userinfo",
-      end_session_endpoint: oidcProviderDomain + "/oxauth/restv1/end_session",
-      jwks_uri: oidcProviderDomain + "/oxauth/restv1/jwks",
-      token_endpoint: oidcProviderDomain + '/oxauth/restv1/token'
-  }
 })
 export default oidcClient;
-

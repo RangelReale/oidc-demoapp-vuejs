@@ -1,7 +1,7 @@
 <template>
   <div>
     User View
-    <div class="token">{{tokenResponse}}</div>
+    <div class="token"><pre>{{tokenResponse}}</pre></div>
     <p><router-link to="/user/edit">Edit User</router-link></p>
     <div>
         API Call:
