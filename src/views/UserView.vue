@@ -9,6 +9,12 @@
         <span v-else>No Data</span>
         {{user}}
     </div>
+    <div v-if="!$apollo.queries.gqlcall.loading">
+      GraphQL call:
+      <ul>
+        <li v-for="place in gqlcall.list" :key="place.place_id">{{place.name}}</li>
+      </ul>
+    </div>
     <button v-on:click="getUser">API Get User</button>
     <button v-on:click="logout">Logout</button>
   </div>
@@ -16,9 +22,27 @@
 
 <script>
 import { mapGetters } from "vuex";
+import gql from 'graphql-tag'
 
 export default {
   name: 'User',
+  apollo: {
+    gqlcall: gql`
+    query {
+      gqlcall: places {
+        list {
+          place_id
+          name
+          players {
+            list {
+              player_id
+              name
+            }
+          }
+        }
+      }
+    }`,
+  },
   computed: {
     ...mapGetters({
         tokenResponse : 'auth/tokenResponse',
